@@ -38,7 +38,7 @@ class VideoCapture: NSObject {
 
     /// The dispatch queue responsible for processing camera set up and frame capture.
     private let sessionQueue = DispatchQueue(
-        label: "com.example.apple-samplecode.estimating-human-pose-with-posenet.sessionqueue")
+        label: "com.golfapp.capture")
 
     /// Toggles between the front and back camera.
     public func flipCamera(completion: @escaping (Error?) -> Void) {
