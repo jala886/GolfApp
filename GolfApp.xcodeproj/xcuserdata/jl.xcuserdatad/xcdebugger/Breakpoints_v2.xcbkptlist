@@ -16,7 +16,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "188"
             endingLineNumber = "188"
-            landmarkName = "checkPlaying(predictions:)"
+            landmarkName = "updateRecorder(poses:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
