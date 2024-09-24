@@ -183,6 +183,7 @@ extension ViewController: PoseNetDelegate {
     private func updateRecorder(poses: [Pose]) {
         // MARK: record function
         if checkHasBody(poses: poses) {
+            // hand blow of hip and within ankle to start recording
             if checkWristInHipToAnkle(poses: poses) && checkWristInAnkleToAnkle(poses: poses) {
                 self.isPlaying = true
             }
