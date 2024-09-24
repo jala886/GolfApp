@@ -1,9 +1,10 @@
-/*
-
-Abstract:
-The implementation of the application's view controller, responsible for coordinating
- the user interface, video feed, and PoseNet model.
-*/
+//
+//  test.swift
+//  PoseFinder
+//
+//  Created by jl on 9/24/24.
+//  Copyright © 2024 Apple. All rights reserved.
+//
 
 import AVFoundation
 import UIKit
@@ -14,6 +15,8 @@ class ViewController: UIViewController {
     @IBOutlet private var previewImageView: PoseImageView!
 
     private let videoCapture = VideoCapture()
+
+    private lazy var videoRecorder = VideoRecorder(session: videoCapture.captureSession)
 
     private var poseNet: PoseNet!
     
@@ -181,43 +184,51 @@ extension ViewController: PoseNetDelegate {
                 if checkWristInEyeToHip {
                     self.isPlaying = false
                 }
-                var res = self.checkIsPlaying(poses: poses)
-                if res != self.isPlaying {
-                    self.videoWriter?.add(image: image,
-                                     presentationTime: CMTime(seconds: self.videoWriter?.lastPresentationTime?.seconds.nextUp ?? 0, preferredTimescale: .min))
-                    self.isPlaying = res
-                }
+//                var res = self.checkIsPlaying(poses: poses)
+//                if res != self.isPlaying {
+//                    self.videoWriter?.add(image: image,
+//                                     presentationTime: CMTime(seconds: self.videoWriter?.lastPresentationTime?.seconds.nextUp ?? 0, preferredTimescale: .min))
+//                    self.isPlaying = res
+//                }
             } else {
                 // stop recording for others
                 self.isPlaying = false
             }
+            updateRecorder()
         }
     }
  
+    private func updateRecorder() {
+        if isPlaying {
+            videoRecorder._captureState == .start
+        } else {
+            videoRecorder._captureState == .end
+        }
+    }
     // MARK: check funtions
     private func checkHasBody(poses: [Pose]) -> Bool {
        // if posese empty, mean that no body in image
        return !poses.isEmpty
     }
     private func checkIsPlaying(poses: [Pose]) -> Bool {
-        // very raw check 
+        // very raw check
         let eye = poses.first!.joints[.leftEar]?.position
         let ankle = poses.first!.joints[.leftAnkle]?.position
-        let lwrist = poses.first!.joints[.leftWrist]?.position 
-        let rwrist = poses.first!.joints[.rightWrist]?.position 
+        let lwrist = poses.first!.joints[.leftWrist]?.position
+        let rwrist = poses.first!.joints[.rightWrist]?.position
         // hand is lower than half body
         return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
     }
     private func checkWristInEyeToHip(posese: [Pose]) -> Bool {
         let eye = poses.first!.joints[.leftEar]?.position
-        let lwrist = poses.first!.joints[.leftWrist]?.position 
-        let lhip = poses.first!.joints[.leftHip]?.position 
+        let lwrist = poses.first!.joints[.leftWrist]?.position
+        let lhip = poses.first!.joints[.leftHip]?.position
         return abs(eye.y-lhip.y) > abs(eye.y-lwrist.y)
     }
     private func checkWristInHipToAnkle(posese: [Pose]) -> Bool {
         let lankle = poses.first!.joints[.leftAnkle]?.position
-        let lwrist = poses.first!.joints[.leftWrist]?.position 
-        let lhip = poses.first!.joints[.leftHip]?.position 
+        let lwrist = poses.first!.joints[.leftWrist]?.position
+        let lhip = poses.first!.joints[.leftHip]?.position
         return abs(lhip.y-lankle.y) < abs(lwrist.y-lankle.y)
     }
 }
