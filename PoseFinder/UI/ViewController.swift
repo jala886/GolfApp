@@ -202,6 +202,9 @@ extension ViewController: PoseNetDelegate {
             videoRecorder._captureState = .end
         }
     }
+}
+
+extension ViewController {
     // MARK: check funtions
     private func checkHasBody(poses: [Pose]) -> Bool {
         // if posese empty, mean that no body in image
