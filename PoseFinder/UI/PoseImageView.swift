@@ -50,7 +50,7 @@ class PoseImageView: UIImageView {
     /// - parameters:
     ///     - poses: An array of detected poses.
     ///     - frame: The image used to detect the poses and used as the background for the returned image.
-    func show(poses: [Pose], on frame: CGImage, handler: @escaping (UIImage) -> Void) {
+    func show(poses: [Pose], on frame: CGImage) {
         let dstImageSize = CGSize(width: frame.width, height: frame.height)
         let dstImageFormat = UIGraphicsImageRendererFormat()
 
@@ -85,7 +85,6 @@ class PoseImageView: UIImageView {
         }
 
         image = dstImage
-        handler(dstImage)
     }
 
     /// Vertically flips and draws the given image.
