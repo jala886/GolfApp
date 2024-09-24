@@ -174,6 +174,13 @@ extension ViewController: PoseNetDelegate {
 
         previewImageView.show(poses: poses, on: currentFrame) { [weak self] image in
             if let self, checkHasBody(poses) {
+                if checkWristInHipToAnkle {
+                    self.isPlaying = true
+                }
+                // "stop" have priority always
+                if checkWristInEyeToHip {
+                    self.isPlaying = false
+                }
                 var res = self.checkIsPlaying(poses: poses)
                 if res != self.isPlaying {
                     self.videoWriter?.add(image: image,
