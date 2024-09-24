@@ -22,12 +22,12 @@ class ViewController: UIViewController {
     
     //private var frames = [UIImage]()
     
-    private var videoWriter: VideoWriter? = {
-        let filename = getDocumentsDirectory().appendingPathComponent("palying.mp4")
-        //try? data.write(to: filename)
-        let writer = VideoWriter(url: filename, width: 200, height: 200, sessionStartTime: CMTime(), isRealTime: true, queue: DispatchQueue.global())
-        return writer
-    }()
+//    private var videoWriter: VideoWriter? = {
+//        let filename = getDocumentsDirectory().appendingPathComponent("palying.mp4")
+//        //try? data.write(to: filename)
+//        let writer = VideoWriter(url: filename, width: 200, height: 200, sessionStartTime: CMTime(), isRealTime: true, queue: DispatchQueue.global())
+//        return writer
+//    }()
     
     var isPlaying: Bool = false
 
