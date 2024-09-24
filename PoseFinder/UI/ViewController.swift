@@ -2,7 +2,7 @@
 //  test.swift
 //  PoseFinder
 //
-//  Created by jl on 9/24/24.
+//  Created by jl on 9/22/24.
 //  Copyright © 2024 Apple. All rights reserved.
 //
 
@@ -195,7 +195,7 @@ extension ViewController: PoseNetDelegate {
             self.isPlaying = false
         }
         // update recorder
-        if isPlaying {
+        if videoRecorder._captureState != .start && isPlaying {
             videoRecorder._captureState = .start
         } else {
             videoRecorder._captureState = .end
@@ -209,9 +209,8 @@ extension ViewController: PoseNetDelegate {
     private func checkIsPlaying(poses: [Pose]) -> Bool {
         // very raw check
         if let eye = poses.first!.joints[.leftEar]?.position,
-        let ankle = poses.first!.joints[.leftAnkle]?.position,
-        let lwrist = poses.first!.joints[.leftWrist]?.position,
-           let rwrist = poses.first!.joints[.rightWrist]?.position{
+           let ankle = poses.first!.joints[.leftAnkle]?.position,
+           let lwrist = poses.first!.joints[.leftWrist]?.position {
             // hand is lower than half body
             return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
         }
@@ -219,16 +218,16 @@ extension ViewController: PoseNetDelegate {
     }
     private func checkWristInEyeToHip(poses: [Pose]) -> Bool {
         if let eye = poses.first!.joints[.leftEar]?.position,
-        let lwrist = poses.first!.joints[.leftWrist]?.position,
-           let lhip = poses.first!.joints[.leftHip]?.position{
+           let lwrist = poses.first!.joints[.leftWrist]?.position,
+           let lhip = poses.first!.joints[.leftHip]?.position {
             return abs(eye.y-lhip.y) > abs(eye.y-lwrist.y)
         }
         return false
     }
     private func checkWristInHipToAnkle(poses: [Pose]) -> Bool {
         if let lankle = poses.first!.joints[.leftAnkle]?.position,
-        let lwrist = poses.first!.joints[.leftWrist]?.position,
-           let lhip = poses.first!.joints[.leftHip]?.position{
+           let lwrist = poses.first!.joints[.leftWrist]?.position,
+           let lhip = poses.first!.joints[.leftHip]?.position {
             return abs(lhip.y-lankle.y) < abs(lwrist.y-lankle.y)
         }
         return false
