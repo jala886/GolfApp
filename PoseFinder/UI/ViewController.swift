@@ -173,18 +173,26 @@ extension ViewController: PoseNetDelegate {
             : poseBuilder.poses
 
         previewImageView.show(poses: poses, on: currentFrame) { [weak self] image in
-            if let self {
+            if let self, checkBody(poses) {
                 var res = self.checkPlaying(poses: poses)
                 if res != self.isPlaying {
                     self.videoWriter?.add(image: image,
                                      presentationTime: CMTime(seconds: self.videoWriter?.lastPresentationTime?.seconds.nextUp ?? 0, preferredTimescale: .min))
                     self.isPlaying = res
                 }
+            } else {
+                // stop recording for others
+                self.isPlaying = false
             }
         }
     }
-    
-    func checkPlaying(poses: [Pose]) -> Bool {
+ 
+    // MARK: check funtions
+    private func checkBody(poses: [Pose]) -> Bool {
+       // if posese empty, mean that no body in image
+       return !poses.isEmpty
+    }
+    private func checkPlaying(poses: [Pose]) -> Bool {
         let eye = poses.first!.joints[.leftEar]?.position
         let ankle = poses.first!.joints[.leftAnkle]?.position
         let lwrist = poses.first!.joints[.leftWrist]?.position 
