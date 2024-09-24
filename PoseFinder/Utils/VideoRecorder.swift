@@ -30,10 +30,10 @@ class VideoRecorder: NSObject {
         _captureSession = session
     }
     
-    private enum _CaptureState {
+    enum _CaptureState {
         case idle, start, capturing, end
     }
-    private var _captureState = _CaptureState.idle
+    var _captureState = _CaptureState.idle
     func capture() {
         switch _captureState {
         case .idle:
