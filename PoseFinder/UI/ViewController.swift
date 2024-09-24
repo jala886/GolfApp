@@ -196,9 +196,9 @@ extension ViewController: PoseNetDelegate {
         }
         // update recorder
         if isPlaying {
-            videoRecorder._captureState == .start
+            videoRecorder._captureState = .start
         } else {
-            videoRecorder._captureState == .end
+            videoRecorder._captureState = .end
         }
     }
     // MARK: check funtions
