@@ -193,11 +193,24 @@ extension ViewController: PoseNetDelegate {
        return !poses.isEmpty
     }
     private func checkIsPlaying(poses: [Pose]) -> Bool {
+        // very raw check 
         let eye = poses.first!.joints[.leftEar]?.position
         let ankle = poses.first!.joints[.leftAnkle]?.position
         let lwrist = poses.first!.joints[.leftWrist]?.position 
         let rwrist = poses.first!.joints[.rightWrist]?.position 
-        // hand is low than half body
+        // hand is lower than half body
         return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
+    }
+    private func checkWristInEyeToHip(posese: [Pose]) -> Bool {
+        let eye = poses.first!.joints[.leftEar]?.position
+        let lwrist = poses.first!.joints[.leftWrist]?.position 
+        let lhip = poses.first!.joints[.leftHip]?.position 
+        return abs(eye.y-lhip.y) > abs(eye.y-lwrist.y)
+    }
+    private func checkWristInHipToAnkle(posese: [Pose]) -> Bool {
+        let lankle = poses.first!.joints[.leftAnkle]?.position
+        let lwrist = poses.first!.joints[.leftWrist]?.position 
+        let lhip = poses.first!.joints[.leftHip]?.position 
+        return abs(lhip.y-lankle.y) < abs(lwrist.y-lankle.y)
     }
 }
