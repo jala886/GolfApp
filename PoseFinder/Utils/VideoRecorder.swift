@@ -22,7 +22,7 @@ class VideoRecorder: NSObject {
         super.init()
         let output = AVCaptureVideoDataOutput()
         guard session.canAddOutput(output) else { return }
-        output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "com.golfapp.video"))
+        output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "com.golfapp.recorder"))
         session.beginConfiguration()
         session.addOutput(output)
         session.commitConfiguration()
