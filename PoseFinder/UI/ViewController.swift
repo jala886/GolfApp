@@ -174,7 +174,7 @@ extension ViewController: PoseNetDelegate {
 
         previewImageView.show(poses: poses, on: currentFrame) { [weak self] image in
             if let self {
-                var res = self.checkPlaying(predictions: predictions)
+                var res = self.checkPlaying(poses: poses)
                 if res != self.isPlaying {
                     self.videoWriter?.add(image: image,
                                      presentationTime: CMTime(seconds: self.videoWriter?.lastPresentationTime?.seconds.nextUp ?? 0, preferredTimescale: .min))
@@ -184,8 +184,7 @@ extension ViewController: PoseNetDelegate {
         }
     }
     
-    func checkPlaying(predictions: PoseNetOutput) -> Bool {
-        print(predictions)
+    func checkPlaying(poses: [Pose]) -> Bool {
         let eye = poses.first!.joints[.leftEar]?.position
         let ankle = poses.first!.joints[.leftAnkle]?.position
         let lwrist = poses.first!.joints[.leftWrist]?.position 
