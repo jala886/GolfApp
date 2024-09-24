@@ -186,10 +186,10 @@ extension ViewController: PoseNetDelegate {
     
     func checkPlaying(predictions: PoseNetOutput) -> Bool {
         print(predictions)
-        let eye = predictions.position(for: .leftEar, at: .init(0, 0))
-        let ankle = predictions.position(for: .leftAnkle, at: .init(0, 0))
-        let lwrist = predictions.position(for: .leftWrist, at: .init(0, 0))
-        let rwrist = predictions.position(for: .rightWrist, at: .init(0, 0))
-        return (lwrist.y + rwrist.y) < 0
+        let eye = poses.first!.joints[.leftEar]?.position
+        let ankle = poses.first!.joints[.leftAnkle]?.position
+        let lwrist = poses.first!.joints[.leftWrist]?.position 
+        let rwrist = poses.first!.joints[.rightWrist]?.position 
+        return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
     }
 }
