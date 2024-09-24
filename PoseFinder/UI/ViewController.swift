@@ -174,31 +174,27 @@ extension ViewController: PoseNetDelegate {
         let poses = algorithm == .single
             ? [poseBuilder.pose]
             : poseBuilder.poses
-
-        previewImageView.show(poses: poses, on: currentFrame) { [weak self] image in
-            if let self, checkHasBody(poses) {
-                if checkWristInHipToAnkle {
-                    self.isPlaying = true
-                }
-                // "stop" have priority always
-                if checkWristInEyeToHip {
-                    self.isPlaying = false
-                }
-//                var res = self.checkIsPlaying(poses: poses)
-//                if res != self.isPlaying {
-//                    self.videoWriter?.add(image: image,
-//                                     presentationTime: CMTime(seconds: self.videoWriter?.lastPresentationTime?.seconds.nextUp ?? 0, preferredTimescale: .min))
-//                    self.isPlaying = res
-//                }
-            } else {
-                // stop recording for others
-                self.isPlaying = false
-            }
-            updateRecorder()
-        }
+        
+        updateRecorder(poses: poses)
+    
+        previewImageView.show(poses: poses, on: currentFrame)
     }
  
-    private func updateRecorder() {
+    private func updateRecorder(poses: [Pose]) {
+        // MARK: record function
+        if checkHasBody(poses: poses) {
+            if checkWristInHipToAnkle(poses: poses) {
+                self.isPlaying = true
+            }
+            // "stop" have priority always
+            if checkWristInEyeToHip(poses: poses) {
+                self.isPlaying = false
+            }
+        } else {
+            // stop recording for others
+            self.isPlaying = false
+        }
+        // update recorder
         if isPlaying {
             videoRecorder._captureState == .start
         } else {
@@ -212,23 +208,30 @@ extension ViewController: PoseNetDelegate {
     }
     private func checkIsPlaying(poses: [Pose]) -> Bool {
         // very raw check
-        let eye = poses.first!.joints[.leftEar]?.position
-        let ankle = poses.first!.joints[.leftAnkle]?.position
-        let lwrist = poses.first!.joints[.leftWrist]?.position
-        let rwrist = poses.first!.joints[.rightWrist]?.position
-        // hand is lower than half body
-        return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
+        if let eye = poses.first!.joints[.leftEar]?.position,
+        let ankle = poses.first!.joints[.leftAnkle]?.position,
+        let lwrist = poses.first!.joints[.leftWrist]?.position,
+           let rwrist = poses.first!.joints[.rightWrist]?.position{
+            // hand is lower than half body
+            return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
+        }
+        return false
     }
-    private func checkWristInEyeToHip(posese: [Pose]) -> Bool {
-        let eye = poses.first!.joints[.leftEar]?.position
-        let lwrist = poses.first!.joints[.leftWrist]?.position
-        let lhip = poses.first!.joints[.leftHip]?.position
-        return abs(eye.y-lhip.y) > abs(eye.y-lwrist.y)
+    private func checkWristInEyeToHip(poses: [Pose]) -> Bool {
+        if let eye = poses.first!.joints[.leftEar]?.position,
+        let lwrist = poses.first!.joints[.leftWrist]?.position,
+           let lhip = poses.first!.joints[.leftHip]?.position{
+            return abs(eye.y-lhip.y) > abs(eye.y-lwrist.y)
+        }
+        return false
     }
-    private func checkWristInHipToAnkle(posese: [Pose]) -> Bool {
-        let lankle = poses.first!.joints[.leftAnkle]?.position
-        let lwrist = poses.first!.joints[.leftWrist]?.position
-        let lhip = poses.first!.joints[.leftHip]?.position
-        return abs(lhip.y-lankle.y) < abs(lwrist.y-lankle.y)
+    private func checkWristInHipToAnkle(poses: [Pose]) -> Bool {
+        if let lankle = poses.first!.joints[.leftAnkle]?.position,
+        let lwrist = poses.first!.joints[.leftWrist]?.position,
+           let lhip = poses.first!.joints[.leftHip]?.position{
+            return abs(lhip.y-lankle.y) < abs(lwrist.y-lankle.y)
+        }
+        return false
     }
 }
+
