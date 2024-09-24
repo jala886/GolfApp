@@ -1,4 +1,4 @@
-# Auto Recording Golf play video
+# Auto Recording Golf playing video
 
 ## Overview
 
