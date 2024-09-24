@@ -189,6 +189,7 @@ extension ViewController: PoseNetDelegate {
         let ankle = poses.first!.joints[.leftAnkle]?.position
         let lwrist = poses.first!.joints[.leftWrist]?.position 
         let rwrist = poses.first!.joints[.rightWrist]?.position 
+        // hand is low than half body
         return abs(eye.y-ankle.y)/2 < abs(eye.y-lwrist.y)
     }
 }
